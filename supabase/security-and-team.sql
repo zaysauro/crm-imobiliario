@@ -1,24 +1,31 @@
 -- Segurança complementar do CRM Cadena.
 -- Execute depois do schema principal e da migration de leads.
 
-create policy "profiles: managers manage roles"
-  on public.profiles for update
-  to authenticated
-  using (public.is_manager_or_admin())
-  with check (
-    public.is_manager_or_admin()
-    and role <> 'admin' or (role = 'admin' and exists (select 1 from public.profiles where id = auth.uid() and role = 'admin'))
-  );
+create or replace function public.current_user_role()
+returns public.user_role
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select role from public.profiles where id = auth.uid();
+$$;
 
--- Evita que um gerente transforme outro usuário em admin. Admin pode administrar qualquer função.
+drop policy if exists "profiles: users update themselves" on public.profiles;
+drop policy if exists "profiles: users update own profile" on public.profiles;
 drop policy if exists "profiles: managers manage roles" on public.profiles;
+
+create policy "profiles: users update own profile"
+  on public.profiles for update
+  to authenticated
+  using (id = auth.uid())
+  with check (id = auth.uid() and role = public.current_user_role());
+
 create policy "profiles: managers manage roles"
   on public.profiles for update
   to authenticated
   using (public.is_manager_or_admin())
   with check (
-    (public.is_manager_or_admin() and role <> 'admin')
-    or (exists (select 1 from public.profiles me where me.id = auth.uid() and me.role = 'admin'))
+    (public.current_user_role() = 'admin')
+    or (public.current_user_role() = 'gerente' and role <> 'admin')
   );
-
--- Um gerente não pode alterar o próprio perfil para admin pela política acima.

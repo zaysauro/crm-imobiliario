@@ -4,7 +4,12 @@ import { createServerClient } from '@supabase/ssr'
 const PUBLIC_ROUTES = new Set(['/login', '/acesso'])
 
 export async function middleware(request: NextRequest) {
+  // TEMPORARY DEVELOPMENT BYPASS:
+  // Allows all routes to be viewed without authentication while the CRM is being tested.
+  // Remove these two lines to restore the authentication middleware below.
   const response = NextResponse.next({ request })
+  return response
+
   const pathname = request.nextUrl.pathname
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key =

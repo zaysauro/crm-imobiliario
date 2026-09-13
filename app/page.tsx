@@ -76,7 +76,7 @@ export default function Home() {
   return (
     <div className="shell">
       <aside className="sidebar">
-        <div className="brand">CRM <span>T3</span></div>
+        <div className="brand">CRM <span>Cadena</span></div>
         <nav className="nav">
           <a className="active" href="#">Dashboard</a>
           <a href="#leads">Leads</a>
@@ -91,7 +91,7 @@ export default function Home() {
 
       <main className="main">
         <header className="topbar">
-          <strong>CRM Imobiliário</strong>
+          <strong>CRM Cadena</strong>
           <div className="topbar-user">
             <span>{email}</span>
             <button className="btn" onClick={logout}>Sair</button>

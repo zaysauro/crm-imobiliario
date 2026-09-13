@@ -16,17 +16,29 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
-    const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) {
-      setError('E-mail ou senha inválidos.')
+      if (error) {
+        const message = error.message.toLowerCase()
+        if (message.includes('email not confirmed')) {
+          setError('Este e-mail ainda não foi confirmado no Supabase. Confirme o e-mail do usuário ou desative a confirmação de e-mail em Authentication → Providers → Email.')
+        } else if (message.includes('invalid login credentials')) {
+          setError('E-mail ou senha incorretos.')
+        } else {
+          setError(`Não foi possível entrar: ${error.message}`)
+        }
+        setLoading(false)
+        return
+      }
+
+      router.push('/')
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não foi possível conectar ao servidor.')
       setLoading(false)
-      return
     }
-
-    router.push('/')
-    router.refresh()
   }
 
   return (

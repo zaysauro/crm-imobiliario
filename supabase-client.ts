@@ -1,23 +1,21 @@
 import { createBrowserClient } from '@supabase/ssr'
 
-// O CRM é uma aplicação autenticada e suas páginas são Client Components.
-// Durante o build do Next.js, alguns Client Components ainda podem ser
-// pré-renderizados no servidor. Nesse momento as variáveis NEXT_PUBLIC_* podem
-// não estar disponíveis no runtime do servidor. Usamos valores não-funcionais
-// apenas para permitir a pré-renderização; no navegador, o cliente usa as
-// variáveis reais da Vercel.
+const BUILD_URL = 'https://placeholder.supabase.co'
+const BUILD_KEY = 'build-placeholder-key'
+
 export function createClient() {
   const isBrowser = typeof window !== 'undefined'
-  const url = isBrowser
-    ? process.env.NEXT_PUBLIC_SUPABASE_URL
-    : 'https://placeholder.supabase.co'
-  const key = isBrowser
-    ? process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-    : 'build-placeholder-key'
 
-  if (!url || !key) {
-    throw new Error('Configuração do Supabase ausente. Verifique NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY na Vercel.')
-  }
+  // NEXT_PUBLIC_* é incorporado ao bundle do navegador durante o build.
+  // Aceitamos também o nome antigo ANON_KEY para evitar quebra caso a Vercel
+  // ainda tenha a variável configurada com esse nome.
+  const url = isBrowser
+    ? (process.env.NEXT_PUBLIC_SUPABASE_URL || BUILD_URL)
+    : BUILD_URL
+
+  const key = isBrowser
+    ? (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || BUILD_KEY)
+    : BUILD_KEY
 
   return createBrowserClient(url, key)
 }

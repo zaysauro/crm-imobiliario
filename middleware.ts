@@ -4,34 +4,33 @@ import { createServerClient } from '@supabase/ssr'
 const PUBLIC_ROUTES = new Set(['/login', '/acesso'])
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next({ request })
-
-  // Development-only bypass so the CRM can be tested without logging in.
-  // Vercel/production keeps the normal Supabase authentication flow.
-  if (process.env.NODE_ENV !== 'production') {
-    return response
-  }
+  let response = NextResponse.next({ request })
 
   const pathname = request.nextUrl.pathname
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key =
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
-  if (!url || !key) {
+  // O middleware precisa de credenciais válidas em produção e no build.
+  // Sem elas, mantém somente as rotas públicas acessíveis.
+  if (!supabaseUrl || !supabaseKey) {
     return PUBLIC_ROUTES.has(pathname)
       ? response
       : NextResponse.redirect(new URL('/acesso', request.url))
   }
 
-  const supabase = createServerClient(url, key, {
+  const supabase = createServerClient(supabaseUrl, supabaseKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll()
       },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => {
+      setAll(cookiesToSet, _headers) {
+        cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value)
+        })
+
+        response = NextResponse.next({ request })
+
+        cookiesToSet.forEach(({ name, value, options }) => {
           response.cookies.set(name, value, options)
         })
       },
@@ -43,7 +42,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   if (PUBLIC_ROUTES.has(pathname)) {
-    if (user && (pathname === '/login' || pathname === '/acesso')) {
+    if (user) {
       return NextResponse.redirect(new URL('/', request.url))
     }
     return response

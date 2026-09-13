@@ -1,21 +1,20 @@
 import { createBrowserClient } from '@supabase/ssr'
 
-const BUILD_URL = 'https://placeholder.supabase.co'
-const BUILD_KEY = 'build-placeholder-key'
-
+/**
+ * Cliente Supabase exclusivo para Client Components/browser.
+ * O cliente de servidor fica em lib/supabase/server.ts e usa cookies.
+ */
 export function createClient() {
-  const isBrowser = typeof window !== 'undefined'
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  // NEXT_PUBLIC_* é incorporado ao bundle do navegador durante o build.
-  // Aceitamos também o nome antigo ANON_KEY para evitar quebra caso a Vercel
-  // ainda tenha a variável configurada com esse nome.
-  const url = isBrowser
-    ? (process.env.NEXT_PUBLIC_SUPABASE_URL || BUILD_URL)
-    : BUILD_URL
-
-  const key = isBrowser
-    ? (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || BUILD_KEY)
-    : BUILD_KEY
+  if (!url || !key) {
+    throw new Error(
+      'Configuração do Supabase ausente. Defina NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY na Vercel.'
+    )
+  }
 
   return createBrowserClient(url, key)
 }

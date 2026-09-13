@@ -26,8 +26,5 @@
     "eslint-config-next": "^15.5.25",
     "prettier": "^3.9.6",
     "typescript": "^5.7.0"
-  },
-  "overrides": {
-    "xlsx": "npm:@keep-lts/xlsx@^0.18.6"
   }
 }

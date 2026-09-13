@@ -32,7 +32,7 @@ export default function LoginPage() {
   return (
     <main className="login-page">
       <section className="login-card">
-        <div className="brand login-brand">CRM <span>T3</span></div>
+        <div className="brand login-brand">CRM <span>Cadena</span></div>
         <div className="eyebrow">Acesso restrito</div>
         <h1>Entrar no CRM</h1>
         <p className="sub">Use seu e-mail e senha para acessar seus atendimentos.</p>

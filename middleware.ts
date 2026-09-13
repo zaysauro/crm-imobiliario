@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
-const PUBLIC_ROUTES = new Set(['/login', '/acesso'])
+const PUBLIC_ROUTES = new Set(['/login'])
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request })
@@ -10,12 +10,12 @@ export async function middleware(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
-  // O middleware precisa de credenciais válidas em produção e no build.
-  // Sem elas, mantém somente as rotas públicas acessíveis.
+  // Sem as credenciais do Supabase, não é possível validar uma sessão.
+  // Mantemos apenas a tela de login acessível para não expor o CRM.
   if (!supabaseUrl || !supabaseKey) {
     return PUBLIC_ROUTES.has(pathname)
       ? response
-      : NextResponse.redirect(new URL('/acesso', request.url))
+      : NextResponse.redirect(new URL('/login', request.url))
   }
 
   const supabase = createServerClient(supabaseUrl, supabaseKey, {
@@ -49,7 +49,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!user) {
-    return NextResponse.redirect(new URL('/acesso', request.url))
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
   return response

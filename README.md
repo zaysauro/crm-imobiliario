@@ -36,11 +36,11 @@ A ordem histórica para um banco novo é:
 
 1. `supabase/schema.sql`
 2. `database-leads-management.sql`
-3. `supabase/crm-modules.sql`
-4. `supabase/security-and-team.sql`
-5. `supabase/migrations/0001_hardening.sql`
+3. `supabase/migrations/0001_hardening.sql`
+4. `supabase/crm-modules.sql`
+5. `supabase/security-and-team.sql`
 
-O banco já existente do projeto Cadena possui as quatro primeiras etapas aplicadas. A migration `0001_hardening.sql` corrige a coluna de importação e garante a função `set_updated_at`.
+O banco já existente do projeto Cadena possui as quatro primeiras etapas históricas aplicadas. A migration `0001_hardening.sql` deve ser executada no banco atual para corrigir a coluna de importação e garantir a função `set_updated_at`.
 
 Para novos ambientes, o objetivo é manter novas alterações exclusivamente em `supabase/migrations/` com nomes numerados.
 

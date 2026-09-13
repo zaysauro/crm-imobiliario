@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
-const PUBLIC_ROUTES = new Set(['/login'])
+const PUBLIC_ROUTES = new Set(['/login', '/acesso'])
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next({ request })
@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
   if (!url || !key) {
     return PUBLIC_ROUTES.has(pathname)
       ? response
-      : NextResponse.redirect(new URL('/login', request.url))
+      : NextResponse.redirect(new URL('/acesso', request.url))
   }
 
   const supabase = createServerClient(url, key, {
@@ -36,14 +36,14 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   if (PUBLIC_ROUTES.has(pathname)) {
-    if (user && pathname === '/login') {
+    if (user && (pathname === '/login' || pathname === '/acesso')) {
       return NextResponse.redirect(new URL('/', request.url))
     }
     return response
   }
 
   if (!user) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    return NextResponse.redirect(new URL('/acesso', request.url))
   }
 
   return response

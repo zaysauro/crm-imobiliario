@@ -15,17 +15,21 @@ export async function createServerSupabaseClient() {
 
   return createServerClient(supabaseUrl, supabaseKey, {
     cookies: {
-      getAll() {
-        return cookieStore.getAll()
+      get(name: string) {
+        return cookieStore.get(name)?.value
       },
-      setAll(cookiesToSet, _headers) {
+      set(name: string, value: string, options: Record<string, unknown>) {
         try {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options)
-          })
+          cookieStore.set({ name, value, ...options })
         } catch {
           // Server Components podem não permitir escrita de cookies.
-          // O middleware é responsável pela renovação da sessão.
+        }
+      },
+      remove(name: string, options: Record<string, unknown>) {
+        try {
+          cookieStore.set({ name, value: '', ...options })
+        } catch {
+          // Server Components podem não permitir escrita de cookies.
         }
       },
     },

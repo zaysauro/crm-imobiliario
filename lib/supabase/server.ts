@@ -1,6 +1,13 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
+/**
+ * Server-side Supabase client for Route Handlers / Server Components.
+ *
+ * There is intentionally no Next.js middleware in this project.
+ * Authentication is handled by the browser Supabase client and the
+ * authenticated session cookie is read here when a server route needs it.
+ */
 export async function createServerSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
@@ -15,21 +22,17 @@ export async function createServerSupabaseClient() {
 
   return createServerClient(supabaseUrl, supabaseKey, {
     cookies: {
-      get(name: string) {
-        return cookieStore.get(name)?.value
+      getAll() {
+        return cookieStore.getAll()
       },
-      set(name: string, value: string, options: Record<string, unknown>) {
+      setAll(cookiesToSet) {
         try {
-          cookieStore.set({ name, value, ...options })
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options)
+          })
         } catch {
-          // Server Components podem não permitir escrita de cookies.
-        }
-      },
-      remove(name: string, options: Record<string, unknown>) {
-        try {
-          cookieStore.set({ name, value: '', ...options })
-        } catch {
-          // Server Components podem não permitir escrita de cookies.
+          // Server Components may not allow cookie writes.
+          // Route Handlers can write cookies when the response supports it.
         }
       },
     },

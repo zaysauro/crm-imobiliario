@@ -9,51 +9,10 @@ const stages = [['novo','Novo'],['em_atendimento','Em atendimento'],['visita','V
 
 export default function DashboardMiniKanban() {
   const supabase = useMemo(() => createClient(), [])
-  const [leads, setLeads] = useState<Lead[]>([])
-  const [profiles, setProfiles] = useState<Profile[]>([])
-  const [dragged, setDragged] = useState<string | null>(null)
-  const [saving, setSaving] = useState(false)
-
-  async function load() {
-    const { data: people } = await supabase.from('profiles').select('id,nome').order('nome')
-    const { data } = await supabase.from('leads').select('id,nome,telefone,origem,status,responsavel_id').is('deleted_at', null).order('created_at', { ascending: false }).limit(500)
-    setProfiles((people ?? []) as Profile[])
-    setLeads((data ?? []) as Lead[])
-  }
-  useEffect(() => { load() }, [])
-
-  async function move(id: string, status: string) {
-    const lead = leads.find(l => l.id === id)
-    if (!lead || lead.status === status) return
-    setSaving(true)
-    const { error } = await supabase.from('leads').update({ status }).eq('id', id)
-    if (!error) {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) await supabase.from('activities').insert({ lead_id: id, user_id: user.id, tipo: 'status_alterado', descricao: `Status alterado de ${lead.status} para ${status}.` })
-      setLeads(xs => xs.map(x => x.id === id ? { ...x, status } : x))
-    }
-    setDragged(null); setSaving(false)
-  }
-  const person = (id: string | null) => profiles.find(p => p.id === id)?.nome ?? 'Sem responsável'
-
-  return <section className="card dashboard-mini-kanban">
-    <div className="toolbar"><div><h2 className="section-title">Pipeline de leads</h2><div className="sub">Arraste os próprios leads entre as etapas. A alteração já é salva no CRM.</div></div><a className="btn" href="/kanban">Kanban completo</a></div>
-    <div className="mini-kanban-board">
-      {stages.map(([id, label]) => {
-        const items = leads.filter(l => l.status === id)
-        return <section className="mini-kanban-column" key={id} onDragOver={e => e.preventDefault()} onDrop={() => dragged && move(dragged, id)}>
-          <div className="mini-kanban-header"><strong>{label}</strong><span>{items.length}</span></div>
-          <div className="mini-kanban-cards">
-            {items.slice(0, 8).map(lead => <article className="mini-kanban-card" key={lead.id} draggable={!saving} onDragStart={() => setDragged(lead.id)} onDragEnd={() => setDragged(null)}>
-              <strong>{lead.nome}</strong>
-              <span>{lead.telefone ?? 'Sem telefone'}</span>
-              <small>{person(lead.responsavel_id)}{lead.origem ? ` · ${lead.origem}` : ''}</small>
-            </article>)}
-            {items.length > 8 && <small className="mini-more">+ {items.length - 8} outros leads</small>}
-            {!items.length && <div className="mini-empty">Nenhum lead</div>}
-          </div>
-        </section>
-      })}
-    </div>
-  </section>
+  const [leads, setLeads] = useState<Lead[]>([]); const [profiles, setProfiles] = useState<Profile[]>([]); const [dragged, setDragged] = useState<string | null>(null); const [saving, setSaving] = useState(false)
+  async function load(){const{data:people}=await supabase.from('profiles').select('id,nome').order('nome');const{data}=await supabase.from('leads').select('id,nome,telefone,origem,status,responsavel_id').is('deleted_at',null).order('created_at',{ascending:false}).limit(500);setProfiles((people??[])as Profile[]);setLeads((data??[])as Lead[])}
+  useEffect(()=>{load()},[])
+  async function move(id:string,status:string){const lead=leads.find(l=>l.id===id);if(!lead||lead.status===status)return;setSaving(true);const{error}=await supabase.from('leads').update({status}).eq('id',id);if(!error){const{data:{user}}=await supabase.auth.getUser();if(user)await supabase.from('activities').insert({lead_id:id,user_id:user.id,tipo:'status_alterado',descricao:`Status alterado de ${lead.status} para ${status}.`});setLeads(xs=>xs.map(x=>x.id===id?{...x,status}:x))}setDragged(null);setSaving(false)}
+  const person=(id:string|null)=>profiles.find(p=>p.id===id)?.nome??'Sem responsável'
+  return <section className="card dashboard-mini-kanban"><style>{`.mini-kanban-board{display:grid;grid-template-columns:repeat(6,minmax(180px,1fr));gap:10px;overflow-x:auto;padding-bottom:4px}.mini-kanban-column{background:#f7f8fa;border:1px solid #e5e7eb;border-radius:12px;min-height:180px;padding:10px}.mini-kanban-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-size:13px}.mini-kanban-header span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:2px 7px;font-size:11px}.mini-kanban-cards{display:flex;flex-direction:column;gap:7px}.mini-kanban-card{background:#fff;border:1px solid #e5e7eb;border-radius:9px;padding:10px;cursor:grab;box-shadow:0 1px 2px rgba(0,0,0,.04)}.mini-kanban-card strong,.mini-kanban-card span,.mini-kanban-card small{display:block}.mini-kanban-card strong{font-size:13px;margin-bottom:4px}.mini-kanban-card span{font-size:11px}.mini-kanban-card small{font-size:10px;opacity:.65;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mini-more,.mini-empty{font-size:11px;opacity:.6;padding:5px}.dashboard-mini-kanban-slot{padding:0 28px 28px}.dashboard-mini-kanban{margin:0}.dashboard-mini-kanban .toolbar{margin-bottom:14px}@media(max-width:1200px){.mini-kanban-board{grid-template-columns:repeat(6,210px)}}`}</style><div className="toolbar"><div><h2 className="section-title">Pipeline de leads</h2><div className="sub">Arraste os próprios leads entre as etapas. A alteração já é salva no CRM.</div></div><a className="btn" href="/kanban">Kanban completo</a></div><div className="mini-kanban-board">{stages.map(([id,label])=>{const items=leads.filter(l=>l.status===id);return <section className="mini-kanban-column" key={id} onDragOver={e=>e.preventDefault()} onDrop={()=>dragged&&move(dragged,id)}><div className="mini-kanban-header"><strong>{label}</strong><span>{items.length}</span></div><div className="mini-kanban-cards">{items.slice(0,8).map(lead=><article className="mini-kanban-card" key={lead.id} draggable={!saving} onDragStart={()=>setDragged(lead.id)} onDragEnd={()=>setDragged(null)}><strong>{lead.nome}</strong><span>{lead.telefone??'Sem telefone'}</span><small>{person(lead.responsavel_id)}{lead.origem?` · ${lead.origem}`:''}</small></article>)}{items.length>8&&<small className="mini-more">+ {items.length-8} outros leads</small>}{!items.length&&<div className="mini-empty">Nenhum lead</div>}</div></section>})}</div></section>
 }

@@ -13,6 +13,8 @@ CRM web da Cadena para gestão de leads, atendimento, follow-ups, equipe, visita
 
 ## Variáveis de ambiente
 
+O CRM precisa destas variáveis para compilar e funcionar na Vercel:
+
 ### Browser / Vercel
 
 ```env
@@ -29,6 +31,12 @@ SUPABASE_SERVICE_ROLE_KEY=...
 ```
 
 A service role nunca deve ser prefixada com `NEXT_PUBLIC_` nem enviada ao navegador.
+
+Na Vercel, configure as variáveis em **Project Settings → Environment Variables** e marque pelo menos **Production** (e **Preview** se também quiser testar previews). Depois faça um novo deploy.
+
+## Autenticação
+
+O projeto usa login normal do Supabase com e-mail e senha. Não há autenticação anônima e não há middleware de proteção de rotas. As páginas do CRM verificam a sessão no cliente e redirecionam para `/login` quando necessário.
 
 ## Banco de dados
 
@@ -54,13 +62,10 @@ npm run build
 npm run dev
 ```
 
-O CI executa typecheck, lint e build em cada push/PR para `main`.
-
 ## Estrutura importante
 
 - `app/` — páginas e rotas do CRM
 - `components/` — componentes compartilhados
 - `lib/supabase/client.ts` — cliente Supabase do navegador
 - `lib/supabase/server.ts` — cliente Supabase do servidor
-- `middleware.ts` — proteção de rotas e sessão
 - `supabase/` — SQL e migrations

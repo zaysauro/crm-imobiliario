@@ -1,7 +1,21 @@
 'use client'
+
 import { ReactNode } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '../supabase-client'
-type Props={children:ReactNode;role?:string;email?:string;title?:string}
-const items=[['/','Dashboard'],['/#leads','Leads'],['/atendimentos','Atendimentos'],['/kanban','Kanban'],['/followups','Follow-ups'],['/importacao','Importar leads'],['/imoveis','Imóveis'],['/visitas','Visitas'],['/propostas','Propostas'],['/relatorios','Relatórios'],['/dashboard-gerencial','Dashboard Gerencial'],['/gestao','Gestão da equipe'],['/auditoria','Auditoria'],['/configuracoes','Configurações']] as const
-export default function AppShell({children,role='corretor',email='',title='CRM Cadena'}:Props){const pathname=usePathname();const router=useRouter();const supabase=createClient();async function logout(){await supabase.auth.signOut();router.replace('/login')}return <div className="shell"><aside className="sidebar"><div className="brand">CRM <span>Cadena</span></div><nav className="nav">{items.map(([href,label])=><a key={href} href={href} className={(pathname===href||(href!=='/'&&pathname.startsWith(href.split('#')[0])))?'active':''}>{label}</a>)}</nav></aside><main className="main"><header className="topbar"><strong>{title}</strong><div className="topbar-user"><span>{email}{email&&role?` · ${role}`:''}</span><button className="btn" onClick={logout}>Sair</button></div></header>{children}</main></div>}
+
+type Props = { children: ReactNode; role?: string; email?: string; title?: string }
+const items = [['/','Dashboard'],['/#leads','Leads'],['/atendimentos','Atendimentos'],['/kanban','Kanban'],['/followups','Follow-ups'],['/importacao','Importar leads'],['/imoveis','Imóveis'],['/visitas','Visitas'],['/propostas','Propostas'],['/relatorios','Relatórios'],['/dashboard-gerencial','Dashboard Gerencial'],['/gestao','Gestão da equipe'],['/auditoria','Auditoria'],['/configuracoes','Configurações']] as const
+
+export default function AppShell({ children, role = 'corretor', email = '', title = 'CRM Cadena' }: Props) {
+  const pathname = usePathname()
+  const router = useRouter()
+
+  async function logout() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.replace('/login')
+  }
+
+  return <div className="shell"><aside className="sidebar"><div className="brand">CRM <span>Cadena</span></div><nav className="nav">{items.map(([href, label]) => <a key={href} href={href} className={(pathname === href || (href !== '/' && pathname.startsWith(href.split('#')[0]))) ? 'active' : ''}>{label}</a>)}</nav></aside><main className="main"><header className="topbar"><strong>{title}</strong><div className="topbar-user"><span>{email}{email && role ? ` · ${role}` : ''}</span><button className="btn" onClick={logout}>Sair</button></div></header>{children}</main></div>
+}

@@ -7,16 +7,20 @@ import { cookies } from 'next/headers'
  * There is intentionally no Next.js middleware in this project.
  * Authentication is handled by the browser Supabase client and the
  * authenticated session cookie is read here when a server route needs it.
+ *
+ * The public Supabase configuration also has the same safe fallback used by
+ * the browser client. This keeps server routes working when the Vercel
+ * deployment is missing the NEXT_PUBLIC_* variables, while the service-role
+ * key remains required only by privileged server operations.
  */
 export async function createServerSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  const supabaseUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    'https://lqjignvvtcwkflslfmpy.supabase.co'
 
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error(
-      'Configuração do Supabase ausente no servidor. Defina NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY.'
-    )
-  }
+  const supabaseKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    'sb_publishable_azTH4kh4dSyk6yQ9uc5y2Q_wxkd_Azg'
 
   const cookieStore = await cookies()
 

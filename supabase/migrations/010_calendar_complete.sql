@@ -31,6 +31,15 @@ ALTER TABLE public.calendar_events ADD CONSTRAINT calendar_events_hour_check CHE
 ALTER TABLE public.calendar_events DROP CONSTRAINT IF EXISTS calendar_events_dur_check;
 ALTER TABLE public.calendar_events ADD CONSTRAINT calendar_events_dur_check CHECK(dur>0);
 
+DO $$ BEGIN
+ IF EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='organizations') AND NOT EXISTS(SELECT 1 FROM pg_constraint WHERE conname='calendar_events_organization_id_fkey') THEN
+  ALTER TABLE public.calendar_events ADD CONSTRAINT calendar_events_organization_id_fkey FOREIGN KEY(organization_id) REFERENCES public.organizations(id);
+ END IF;
+ IF NOT EXISTS(SELECT 1 FROM pg_constraint WHERE conname='calendar_events_corretor_id_fkey') THEN
+  ALTER TABLE public.calendar_events ADD CONSTRAINT calendar_events_corretor_id_fkey FOREIGN KEY(corretor_id) REFERENCES public.profiles(id) ON DELETE SET NULL;
+ END IF;
+END $$;
+
 CREATE INDEX IF NOT EXISTS idx_calendar_events_date ON public.calendar_events(date);
 CREATE INDEX IF NOT EXISTS idx_calendar_events_corretor ON public.calendar_events(corretor_id);
 CREATE INDEX IF NOT EXISTS idx_calendar_events_org_date ON public.calendar_events(organization_id,date);

@@ -7,7 +7,7 @@ import DashboardMiniKanban from './dashboard-mini-kanban'
 import DashboardFunnel from './dashboard-funnel'
 
 type Props = { children: ReactNode; role?: string; email?: string; title?: string }
-const items = [['/','Dashboard'],['/#leads','Leads'],['/atendimentos','Atendimentos'],['/kanban','Kanban'],['/followups','Follow-ups'],['/importacao','Importar leads'],['/imoveis','Imóveis'],['/contratos','Contratos'],['/visitas','Visitas'],['/propostas','Propostas'],['/relatorios','Relatórios'],['/dashboard-gerencial','Dashboard Gerencial'],['/gestao','Gestão da equipe'],['/auditoria','Auditoria'],['/configuracoes','Configurações']] as const
+const items = [['/','Dashboard'],['/#leads','Leads'],['/atendimentos','Atendimentos'],['/kanban','Kanban'],['/followups','Follow-ups'],['/calendario','Calendário'],['/importacao','Importar leads'],['/imoveis','Imóveis'],['/simulador','Simulador'],['/contratos','Contratos'],['/visitas','Visitas'],['/propostas','Propostas'],['/relatorios','Relatórios'],['/dashboard-gerencial','Dashboard Gerencial'],['/gestao','Gestão da equipe'],['/auditoria','Auditoria'],['/configuracoes','Configurações'],['/journal','Meu Journal']] as const
 
 export default function AppShell({ children, role = 'corretor', email = '', title = 'CRM Cadena' }: Props) {
   const pathname = usePathname()

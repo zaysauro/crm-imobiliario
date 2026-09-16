@@ -2,14 +2,14 @@
 
 export const dynamic = 'force-dynamic'
 
-import { FormEvent, useEffect, useMemo, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import AppShell from '../../components/app-shell'
 import { createClient } from '../../supabase-client'
 import styles from './JournalPage.module.css'
 
 type Entry={id:string;user_id:string;title:string;content:string|null;reference_at:string|null;tags:string[]|null;created_at:string;updated_at:string}
-export default function JournalPage(){const router=useRouter();const supabase=useMemo(()=>createClient(),[]);const [entries,setEntries]=useState<Entry[]>([]);const [userId,setUserId]=useState('');const [email,setEmail]=useState('');const [search,setSearch]=useState('');const [tag,setTag]=useState('');const [selected,setSelected]=useState<Entry|null>(null);const [form,setForm]=useState({title:'',content:'',reference_at:'',tags:''});const [saving,setSaving]=useState(false);const [error,setError]=useState('');const [mobileEditor,setMobileEditor]=useState(false)
+export default function JournalPage(){const router=useRouter();const supabase=useMemo(()=>createClient(),[]);const [entries,setEntries]=useState<Entry[]>([]);const [userId,setUserId]=useState('');const [email,setEmail]=useState('');const [search,setSearch]=useState('');const [tag,setTag]=useState('');const [selected,setSelected]=useState<Entry|null>(null);const [form,setForm]=useState({title:'',content:'',reference_at:'',tags:''});const [saving,setSaving]=useState(false);const [error,setError]=useState('');const [mobileEditor,setMobileEditor]=useState(false);const saveFormRef=useRef<HTMLFormElement>(null)
  async function load(){const {data:{user}}=await supabase.auth.getUser();if(!user){router.replace('/login');return}setUserId(user.id);setEmail(user.email??'');const {data,error:e}=await supabase.from('journal_entries').select('*').eq('user_id',user.id).order('created_at',{ascending:false});if(e)setError(e.message);setEntries((data??[]) as Entry[])}useEffect(()=>{load()},[])
  const tags=useMemo(()=>Array.from(new Set(entries.flatMap(e=>e.tags??[]))).sort(),[entries]);const filtered=useMemo(()=>entries.filter(e=>{const q=search.trim().toLowerCase();const matches=!q||e.title.toLowerCase().includes(q)||(e.content??'').toLowerCase().includes(q);const matchesTag=!tag||((e.tags??[]).includes(tag));return matches&&matchesTag}),[entries,search,tag])
  function newEntry(){setSelected(null);setForm({title:'',content:'',reference_at:'',tags:''});setError('');setMobileEditor(true)}function edit(e:Entry){setSelected(e);setForm({title:e.title,content:e.content??'',reference_at:e.reference_at?new Date(e.reference_at).toISOString().slice(0,16):'',tags:(e.tags??[]).join(', ')});setError('');setMobileEditor(true)}
@@ -44,7 +44,7 @@ export default function JournalPage(){const router=useRouter();const supabase=us
            <div className={styles.actions}>
              <button className={styles.actionButton} type="button" onClick={focusTags}>🏷️ Tags</button>
              {selected&&<button className={`${styles.actionButton} ${styles.deleteButton}`} type="button" onClick={remove}>🗑️</button>}
-             <button className={styles.saveButton} type="button" disabled={saving} onClick={()=>document.getElementById('journal-save-form')?.requestSubmit()}>{saving?'Salvando...':'Salvar'}</button>
+             <button className={styles.saveButton} type="button" disabled={saving} onClick={()=>saveFormRef.current?.requestSubmit()}>{saving?'Salvando...':'Salvar'}</button>
              <button className={`${styles.actionButton} ${styles.mobileBack}`} type="button" onClick={()=>setMobileEditor(false)}>Voltar</button>
            </div>
          </div>
@@ -52,7 +52,7 @@ export default function JournalPage(){const router=useRouter();const supabase=us
            {selected?<><span>Criado em {formatCreated(selected.created_at)}</span><span>Editado {editedLabel(selected.updated_at)}</span></>:<span>Rascunho pessoal</span>}
            {(form.tags.split(',').map(x=>x.trim()).filter(Boolean)).map(t=><span className={styles.metaTag} key={t}>{t}</span>)}
          </div>
-         <form id="journal-save-form" className={styles.formArea} onSubmit={save}>
+         <form ref={saveFormRef} id="journal-save-form" className={styles.formArea} onSubmit={save}>
            <textarea className={styles.textarea} value={form.content} onChange={e=>setForm({...form,content:e.target.value})} placeholder="Escreva sua anotação aqui..." aria-label="Conteúdo da anotação" />
            <div className={styles.supportFields}>
              <label className={styles.field}>Data/hora de referência<input type="datetime-local" value={form.reference_at} onChange={e=>setForm({...form,reference_at:e.target.value})}/></label>

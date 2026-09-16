@@ -5,54 +5,13 @@ import { createClient } from '../supabase-client'
 import { CalendarEvent, EventType } from '../types/calendar'
 import { dateKey } from '../lib/calendar'
 
-type Profile = { id: string; nome?: string | null; name?: string | null; email?: string | null; role?: string | null }
+type Profile = { id: string; nome?: string | null; name?: string | null; email?: string | null; role?: string | null; organization_id?: string | null }
 type Lead = { id: string; nome?: string | null; name?: string | null }
-
-function rowToEvent(row: any): CalendarEvent {
-  const start = new Date(row.start_at)
-  const end = new Date(row.end_at)
-  const diff = Math.max(15, Math.round((end.getTime() - start.getTime()) / 60000))
-  return { id: row.id, type: row.type, title: row.title, lead: row.lead_name ?? undefined, lead_id: row.lead_id ?? undefined, date: row.date ?? dateKey(start), hour: row.hour ?? start.getHours(), min: row.min ?? start.getMinutes(), dur: row.dur ?? diff, corretor: row.corretor_name ?? '', corretor_id: row.corretor_id ?? undefined, notes: row.notes ?? row.description ?? undefined, created_at: row.created_at }
-}
-
-export function useCalendarEvents(startDate: Date, endDate: Date, typeFilters: EventType[] = [], corretorFilters: string[] = []) {
-  const [events, setEvents] = useState<CalendarEvent[]>([])
-  const [profiles, setProfiles] = useState<Profile[]>([])
-  const [leads, setLeads] = useState<Lead[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const supabase = createClient()
-
-  const fetchAll = useCallback(async () => {
-    setLoading(true); setError('')
-    try {
-      const from = dateKey(startDate), to = dateKey(endDate)
-      const [{ data, error: eventError }, { data: people }, { data: leadRows }] = await Promise.all([
-        supabase.from('calendar_events').select('*').gte('date', from).lte('date', to).order('date').order('hour').order('min'),
-        supabase.from('profiles').select('id,nome,email,role').order('nome'),
-        supabase.from('leads').select('id,nome').is('deleted_at', null).order('nome').limit(2000),
-      ])
-      if (eventError) throw eventError
-      let mapped = (data ?? []).map(rowToEvent)
-      if (typeFilters.length) mapped = mapped.filter(e => typeFilters.includes(e.type))
-      if (corretorFilters.length) mapped = mapped.filter(e => e.corretor_id ? corretorFilters.includes(e.corretor_id) : false)
-      setEvents(mapped); setProfiles((people ?? []) as Profile[]); setLeads((leadRows ?? []) as Lead[])
-    } catch (e: any) { setError('Não foi possível carregar o calendário. Tente novamente.'); console.error(e) }
-    finally { setLoading(false) }
-  }, [startDate.getTime(), endDate.getTime(), JSON.stringify(typeFilters), JSON.stringify(corretorFilters)])
-
-  useEffect(() => { void fetchAll() }, [fetchAll])
-
-  const save = async (data: Partial<CalendarEvent> & { id?: string }) => {
-    const date = data.date ?? dateKey(new Date()); const hour = data.hour ?? 9; const min = data.min ?? 0; const dur = data.dur ?? 60
-    const start = new Date(`${date}T${String(hour).padStart(2,'0')}:${String(min).padStart(2,'0')}:00`); const end = new Date(start.getTime() + dur * 60000)
-    const payload = { type: data.type ?? 'visita', title: data.title?.trim() ?? '', lead_id: data.lead_id || null, lead_name: data.lead || null, date, hour, min, dur, corretor_id: data.corretor_id || null, corretor_name: data.corretor || null, notes: data.notes?.trim() || null, start_at: start.toISOString(), end_at: end.toISOString() }
-    const result = data.id ? await supabase.from('calendar_events').update(payload).eq('id', data.id) : await supabase.from('calendar_events').insert(payload).select('id').single()
-    if (result.error) throw result.error
-    await fetchAll(); return result.data
-  }
-  const createEvent = (data: Partial<CalendarEvent>) => save(data)
-  const updateEvent = (id: string, data: Partial<CalendarEvent>) => save({ ...data, id })
-  const deleteEvent = async (id: string) => { const { error } = await supabase.from('calendar_events').delete().eq('id', id); if (error) throw error; await fetchAll() }
-  return { events, profiles, leads, loading, error, createEvent, updateEvent, deleteEvent, refetch: fetchAll }
+function rowToEvent(row: any): CalendarEvent { const start=new Date(row.start_at);const end=new Date(row.end_at);const diff=Math.max(15,Math.round((end.getTime()-start.getTime())/60000));return {id:row.id,type:row.type,title:row.title,lead:row.lead_name??undefined,lead_id:row.lead_id??undefined,date:row.date??dateKey(start),hour:row.hour??start.getHours(),min:row.min??start.getMinutes(),dur:row.dur??diff,corretor:row.corretor_name??'',corretor_id:row.corretor_id??undefined,notes:row.notes??row.description??undefined,created_at:row.created_at} }
+export function useCalendarEvents(startDate:Date,endDate:Date,typeFilters:EventType[]=[],corretorFilters:string[]=[]){
+ const [events,setEvents]=useState<CalendarEvent[]>([]);const [profiles,setProfiles]=useState<Profile[]>([]);const [leads,setLeads]=useState<Lead[]>([]);const [loading,setLoading]=useState(true);const [error,setError]=useState('');const supabase=createClient()
+ const fetchAll=useCallback(async()=>{setLoading(true);setError('');try{const from=dateKey(startDate),to=dateKey(endDate);const [{data,error:eventError},{data:people},{data:leadRows}]=await Promise.all([supabase.from('calendar_events').select('*').gte('date',from).lte('date',to).order('date').order('hour').order('min'),supabase.from('profiles').select('id,nome,email,role,organization_id').order('nome'),supabase.from('leads').select('id,nome').is('deleted_at',null).order('nome').limit(2000)]);if(eventError)throw eventError;let mapped=(data??[]).map(rowToEvent);if(typeFilters.length)mapped=mapped.filter(e=>typeFilters.includes(e.type));if(corretorFilters.length)mapped=mapped.filter(e=>e.corretor_id?corretorFilters.includes(e.corretor_id):false);setEvents(mapped);setProfiles((people??[]) as Profile[]);setLeads((leadRows??[]) as Lead[])}catch(e){setError('Não foi possível carregar o calendário. Tente novamente.');console.error(e)}finally{setLoading(false)}},[startDate.getTime(),endDate.getTime(),JSON.stringify(typeFilters),JSON.stringify(corretorFilters)])
+ useEffect(()=>{void fetchAll()},[fetchAll])
+ const save=async(data:Partial<CalendarEvent>&{id?:string})=>{const date=data.date??dateKey(new Date());const hour=data.hour??9;const min=data.min??0;const dur=data.dur??60;const start=new Date(`${date}T${String(hour).padStart(2,'0')}:${String(min).padStart(2,'0')}:00`);const end=new Date(start.getTime()+dur*60000);const {data:{user}}=await supabase.auth.getUser();const {data:me}=user?await supabase.from('profiles').select('organization_id').eq('id',user.id).maybeSingle():{data:null} as any;const payload={type:data.type??'visita',title:data.title?.trim()??'',lead_id:data.lead_id||null,lead_name:data.lead||null,date,hour,min,dur,corretor_id:data.corretor_id||null,corretor_name:data.corretor||null,notes:data.notes?.trim()||null,start_at:start.toISOString(),end_at:end.toISOString(),organization_id:me?.organization_id??null,created_by:user?.id??null};const result=data.id?await supabase.from('calendar_events').update(payload).eq('id',data.id):await supabase.from('calendar_events').insert(payload).select('id').single();if(result.error)throw result.error;await fetchAll();return result.data}
+ const createEvent=(data:Partial<CalendarEvent>)=>save(data);const updateEvent=(id:string,data:Partial<CalendarEvent>)=>save({...data,id});const deleteEvent=async(id:string)=>{const {error}=await supabase.from('calendar_events').delete().eq('id',id);if(error)throw error;await fetchAll()};return {events,profiles,leads,loading,error,createEvent,updateEvent,deleteEvent,refetch:fetchAll}
 }

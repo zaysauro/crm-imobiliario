@@ -1,0 +1,53 @@
+html[data-theme='dark'] body{background:#111315;color:#e7e9ec}
+html[data-theme='dark'] .sidebar,html[data-theme='dark'] .sidebar-footer,html[data-theme='dark'] .topbar{background:#17191c;color:#e7e9ec;border-color:#2b3036}
+html[data-theme='dark'] .brand{color:#f3f4f6}
+html[data-theme='dark'] .nav a,html[data-theme='dark'] .sidebar-footer a,html[data-theme='dark'] .sidebar-logout{color:#aeb5bf}
+html[data-theme='dark'] .nav a:hover,html[data-theme='dark'] .sidebar-footer a:hover,html[data-theme='dark'] .sidebar-logout:hover{background:#22262b;color:#60a5fa}
+html[data-theme='dark'] .nav a.active,html[data-theme='dark'] .sidebar-footer a.active{background:#172b46;color:#60a5fa}
+html[data-theme='dark'] .nav-divider{background:#2b3036}
+html[data-theme='dark'] .topbar-user{color:#aeb5bf}
+html[data-theme='dark'] .btn{background:#1b1f23;border-color:#343a42;color:#e7e9ec}
+html[data-theme='dark'] .btn:hover{background:#242930}
+html[data-theme='dark'] .btn.primary{background:#2563eb;border-color:#2563eb;color:#fff}
+html[data-theme='dark'] .card,html[data-theme='dark'] .followup-item,html[data-theme='dark'] .pipeline-stage,html[data-theme='dark'] .kanban-card,html[data-theme='dark'] .login-card,html[data-theme='dark'] .modal{background:#181b1f;color:#e7e9ec;border-color:#30353c}
+html[data-theme='dark'] .sub,html[data-theme='dark'] .eyebrow,html[data-theme='dark'] .metric-label,html[data-theme='dark'] .metric-help,html[data-theme='dark'] .section-title,html[data-theme='dark'] .pipeline-stage span,html[data-theme='dark'] .pipeline-stage small{color:#9da5af}
+html[data-theme='dark'] td,html[data-theme='dark'] .detail-row,html[data-theme='dark'] .timeline-item{border-color:#2b3036}
+html[data-theme='dark'] th{border-color:#30353c;color:#9da5af}
+html[data-theme='dark'] .detail-notes,html[data-theme='dark'] .timeline-item{background:#141619;color:#cbd1d8}
+html[data-theme='dark'] input,html[data-theme='dark'] select,html[data-theme='dark'] textarea{background:#111417!important;color:#e7e9ec!important;border-color:#3a4149!important}
+html[data-theme='dark'] input::placeholder,html[data-theme='dark'] textarea::placeholder{color:#737c87}
+html[data-theme='dark'] .transfer-box{background:#121c28;border-color:#23466e}
+html[data-theme='dark'] .kanban-column{background:#15181b;border-color:#30353c}
+html[data-theme='dark'] .modal-backdrop,html[data-theme='dark'] .cal-modal-backdrop{background:rgba(0,0,0,.68)}
+html[data-theme='dark'] .login-page{background:#111315}
+html[data-theme='dark'] .form-error{background:#30191b;border-color:#713238;color:#fca5a5}
+html[data-theme='dark'] .form-success{background:#13271f;border-color:#245d43;color:#86efac}
+
+/* Calendário */
+html[data-theme='dark'] .cal-shell,html[data-theme='dark'] .cal-sidebar,html[data-theme='dark'] .cal-main,html[data-theme='dark'] .cal-topbar,html[data-theme='dark'] .cal-week-header,html[data-theme='dark'] .cal-time-axis,html[data-theme='dark'] .cal-day-column,html[data-theme='dark'] .cal-month-weekdays,html[data-theme='dark'] .cal-month-cell,html[data-theme='dark'] .cal-agenda{background:#15181b;color:#e7e9ec}
+html[data-theme='dark'] .cal-sidebar,html[data-theme='dark'] .cal-logo,html[data-theme='dark'] .cal-sidebar footer,html[data-theme='dark'] .cal-topbar,html[data-theme='dark'] .cal-legend,html[data-theme='dark'] .cal-week-header,html[data-theme='dark'] .cal-time-axis>div,html[data-theme='dark'] .cal-hour-cell,html[data-theme='dark'] .cal-day-column,html[data-theme='dark'] .cal-month-cell,html[data-theme='dark'] .cal-month-weekdays>div{border-color:#2b3036}
+html[data-theme='dark'] .cal-logo,html[data-theme='dark'] .cal-logo b,html[data-theme='dark'] .cal-topbar h1{color:#f3f4f6}
+html[data-theme='dark'] .cal-toggle,html[data-theme='dark'] .cal-legend,html[data-theme='dark'] .cal-day-head,html[data-theme='dark'] .cal-time-axis>div,html[data-theme='dark'] .cal-month-weekdays>div{color:#929aa5}
+html[data-theme='dark'] .cal-toggle:hover{color:#f3f4f6}
+html[data-theme='dark'] .cal-mini-head strong,html[data-theme='dark'] .cal-mini-grid button{color:#c7cdd5}
+html[data-theme='dark'] .cal-mini-grid button:hover,html[data-theme='dark'] .cal-hour-cell:hover,html[data-theme='dark'] .cal-month-cell:hover{background:#1c2126}
+html[data-theme='dark'] .cal-mini-grid .outside,html[data-theme='dark'] .cal-month-cell.outside{color:#59616b}
+html[data-theme='dark'] .cal-tabs{background:#22262b}
+html[data-theme='dark'] .cal-tabs button{color:#aeb5bf}
+html[data-theme='dark'] .cal-tabs .active,html[data-theme='dark'] .cal-topbar>button{background:#1c2024;color:#e7e9ec;border-color:#343a42}
+html[data-theme='dark'] .cal-topbar>button:hover{background:#242930;border-color:#46505b}
+html[data-theme='dark'] .cal-event-chip{box-shadow:none}
+html[data-theme='dark'] .cal-month-cell.today{background:#16243a}
+html[data-theme='dark'] .cal-agenda-event{background:#181b1f;border-color:#343a42;color:#e7e9ec}
+html[data-theme='dark'] .cal-agenda-event:hover{background:#1f2429}
+html[data-theme='dark'] .cal-agenda-event>strong{color:#f3f4f6}
+html[data-theme='dark'] .cal-agenda-day header strong{color:#c7cdd5}
+html[data-theme='dark'] .cal-agenda-day header span,.cal-agenda-time,.cal-agenda-info{color:#858e99}
+html[data-theme='dark'] .cal-modal{background:#181b1f;color:#e7e9ec}
+html[data-theme='dark'] .cal-modal header h2,html[data-theme='dark'] .cal-modal legend,html[data-theme='dark'] .cal-modal label{color:#e7e9ec}
+html[data-theme='dark'] .cal-modal header>button{background:#252a30;color:#cbd1d8}
+html[data-theme='dark'] .cal-empty{color:#858e99}
+html[data-theme='dark'] .cal-page-loading{background:#111315;color:#aeb5bf}
+
+/* Journal / Books e componentes com superfícies explícitas */
+html[data-theme='dark'] [class*='Page'],html[data-theme='dark'] [class*='page']{color:#e7e9ec}

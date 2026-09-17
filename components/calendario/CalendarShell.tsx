@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { CalendarEvent, CalendarView, EventType, EVENT_TYPES } from '../../types/calendar'
 import { formatDayTitle, formatMonthTitle } from '../../lib/calendar'
 import { useCalendarEvents } from '../../hooks/useCalendarEvents'
@@ -16,6 +16,7 @@ type Lead={id:string;nome?:string|null;name?:string|null}
 
 export default function CalendarShell({userId,role,userName,userEmail,profiles,leads}:{userId:string;role:string;userName:string;userEmail:string;profiles?:Person[];leads?:Lead[]}){
  const [cur,setCur]=useState(new Date()),[mini,setMini]=useState(new Date()),[view,setView]=useState<CalendarView>('week'),[typeFilters,setTypeFilters]=useState<EventType[]>(EVENT_TYPES.map(x=>x.value)),[brokerFilters,setBrokerFilters]=useState<string[]|null>(null),[modal,setModal]=useState<CalendarEvent|null|undefined>(undefined),[modalDate,setModalDate]=useState(new Date()),[toast,setToast]=useState('')
+ useEffect(()=>{const mq=window.matchMedia('(max-width: 767px)');const sync=()=>setView(v=>mq.matches?(v==='month'||v==='week'?'agenda':v):v);sync();mq.addEventListener?.('change',sync);return()=>mq.removeEventListener?.('change',sync)},[])
  const range=useMemo(()=>{const a=new Date(cur),b=new Date(cur);a.setDate(a.getDate()-42);b.setDate(b.getDate()+45);const ms=new Date(mini.getFullYear(),mini.getMonth(),1),me=new Date(mini.getFullYear(),mini.getMonth()+1,0);if(ms<a)a.setTime(ms.getTime());if(me>b)b.setTime(me.getTime());return {a,b}},[cur,mini]);const {events,profiles:hookProfiles,leads:hookLeads,loading,error,createEvent,updateEvent,deleteEvent}=useCalendarEvents(range.a,range.b,typeFilters,brokerFilters??[]);const people=profiles?.length?profiles:hookProfiles,leadList=leads?.length?leads:hookLeads
  const openNew=(d=new Date(cur))=>{setModalDate(d);setModal(null);setToast('')},openEdit=(e:CalendarEvent)=>{setModalDate(new Date(`${e.date}T00:00:00`));setModal(e)}
  const save=async(data:Partial<CalendarEvent>)=>{if(data.id)await updateEvent(data.id,data);else await createEvent(data);setModal(undefined);setToast('✓ Evento salvo!');setTimeout(()=>setToast(''),2500)};const remove=async(id:string)=>{await deleteEvent(id);setModal(undefined);setToast('✓ Evento excluído!');setTimeout(()=>setToast(''),2500)}

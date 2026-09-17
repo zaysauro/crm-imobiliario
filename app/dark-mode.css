@@ -23,7 +23,6 @@ html[data-theme='dark'] .login-page{background:#111315}
 html[data-theme='dark'] .form-error{background:#30191b;border-color:#713238;color:#fca5a5}
 html[data-theme='dark'] .form-success{background:#13271f;border-color:#245d43;color:#86efac}
 
-/* Calendário */
 html[data-theme='dark'] .cal-shell,html[data-theme='dark'] .cal-sidebar,html[data-theme='dark'] .cal-main,html[data-theme='dark'] .cal-topbar,html[data-theme='dark'] .cal-week-header,html[data-theme='dark'] .cal-time-axis,html[data-theme='dark'] .cal-day-column,html[data-theme='dark'] .cal-month-weekdays,html[data-theme='dark'] .cal-month-cell,html[data-theme='dark'] .cal-agenda{background:#15181b;color:#e7e9ec}
 html[data-theme='dark'] .cal-sidebar,html[data-theme='dark'] .cal-logo,html[data-theme='dark'] .cal-sidebar footer,html[data-theme='dark'] .cal-topbar,html[data-theme='dark'] .cal-legend,html[data-theme='dark'] .cal-week-header,html[data-theme='dark'] .cal-time-axis>div,html[data-theme='dark'] .cal-hour-cell,html[data-theme='dark'] .cal-day-column,html[data-theme='dark'] .cal-month-cell,html[data-theme='dark'] .cal-month-weekdays>div{border-color:#2b3036}
 html[data-theme='dark'] .cal-logo,html[data-theme='dark'] .cal-logo b,html[data-theme='dark'] .cal-topbar h1{color:#f3f4f6}
@@ -42,12 +41,33 @@ html[data-theme='dark'] .cal-agenda-event{background:#181b1f;border-color:#343a4
 html[data-theme='dark'] .cal-agenda-event:hover{background:#1f2429}
 html[data-theme='dark'] .cal-agenda-event>strong{color:#f3f4f6}
 html[data-theme='dark'] .cal-agenda-day header strong{color:#c7cdd5}
-html[data-theme='dark'] .cal-agenda-day header span,.cal-agenda-time,.cal-agenda-info{color:#858e99}
+html[data-theme='dark'] .cal-agenda-day header span,html[data-theme='dark'] .cal-agenda-time,html[data-theme='dark'] .cal-agenda-info{color:#858e99}
 html[data-theme='dark'] .cal-modal{background:#181b1f;color:#e7e9ec}
 html[data-theme='dark'] .cal-modal header h2,html[data-theme='dark'] .cal-modal legend,html[data-theme='dark'] .cal-modal label{color:#e7e9ec}
 html[data-theme='dark'] .cal-modal header>button{background:#252a30;color:#cbd1d8}
 html[data-theme='dark'] .cal-empty{color:#858e99}
 html[data-theme='dark'] .cal-page-loading{background:#111315;color:#aeb5bf}
 
-/* Journal / Books e componentes com superfícies explícitas */
-html[data-theme='dark'] [class*='Page'],html[data-theme='dark'] [class*='page']{color:#e7e9ec}
+html[data-theme='dark'] .page{color:#e7e9ec}
+html[data-theme='dark'] .layout{background:#181b1f;border-color:#30353c}
+html[data-theme='dark'] .layout .sidebar,html[data-theme='dark'] .editor{background:#181b1f;border-color:#30353c}
+html[data-theme='dark'] .header h1,html[data-theme='dark'] .itemTitle,html[data-theme='dark'] .titleInput{color:#f3f4f6}
+html[data-theme='dark'] .subtitle,html[data-theme='dark'] .preview,html[data-theme='dark'] .date,html[data-theme='dark'] .field,html[data-theme='dark'] .metadata{color:#8f98a3}
+html[data-theme='dark'] .sidebarTop,html[data-theme='dark'] .filters,html[data-theme='dark'] .item,html[data-theme='dark'] .editorHeader,html[data-theme='dark'] .metadata,html[data-theme='dark'] .footerActions{border-color:#30353c}
+html[data-theme='dark'] .tagButton,html[data-theme='dark'] .itemTag,html[data-theme='dark'] .actionButton,html[data-theme='dark'] .cancelButton{background:#20242a;border-color:#3a4149;color:#aeb5bf}
+html[data-theme='dark'] .tagButton.active,html[data-theme='dark'] .metaTag{background:#172b46;border-color:#2563eb;color:#93c5fd}
+html[data-theme='dark'] .item:hover{background:#20242a}
+html[data-theme='dark'] .item.selected{background:#172b46;border-left-color:#2563eb}
+html[data-theme='dark'] .textarea{color:#e7e9ec;background:transparent}
+html[data-theme='dark'] .emptyList,html[data-theme='dark'] .emptyEditor{color:#858e99}
+html[data-theme='dark'] .field input{background:#111417;color:#e7e9ec;border-color:#3a4149}
+
+html[data-theme='dark'] .gridBooks .card,html[data-theme='dark'] .catalog.card{background:#181b1f;border-color:#30353c}
+html[data-theme='dark'] .uploadZone{background:#111417;border-color:#46505b}
+html[data-theme='dark'] .uploadZone:hover{background:#13233a;border-color:#2563eb}
+html[data-theme='dark'] .uploadSelected{background:#13271f;border-color:#16a34a}
+html[data-theme='dark'] .uploadTitle,html[data-theme='dark'] .catalogTitle,html[data-theme='dark'] .title{color:#f3f4f6}
+html[data-theme='dark'] .subtitle,html[data-theme='dark'] .label,html[data-theme='dark'] .count,html[data-theme='dark'] .breadcrumb,html[data-theme='dark'] .sectionLabel{color:#8f98a3}
+html[data-theme='dark'] .search,html[data-theme='dark'] .input,html[data-theme='dark'] .select,html[data-theme='dark'] .textarea{background:#111417;color:#e7e9ec;border-color:#3a4149}
+html[data-theme='dark'] .cancel{background:#20242a;color:#aeb5bf;border-color:#3a4149}
+html[data-theme='dark'] .empty{color:#858e99}

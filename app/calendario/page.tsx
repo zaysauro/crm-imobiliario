@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import CalendarShell from '../../components/calendario/CalendarShell'
+import AppShell from '../../components/app-shell'
 import { createClient } from '../../supabase-client'
 import './calendario.css'
 
@@ -34,11 +35,13 @@ export default function CalendarioPage() {
   }
 
   return (
-    <CalendarShell
-      userId={user.id}
-      role={profile?.role ?? 'corretor'}
-      userName={profile?.nome ?? profile?.name ?? ''}
-      userEmail={user.email ?? ''}
-    />
+    <AppShell role={profile?.role ?? 'corretor'} email={user.email ?? ''} title="CRM Cadena">
+      <CalendarShell
+        userId={user.id}
+        role={profile?.role ?? 'corretor'}
+        userName={profile?.nome ?? profile?.name ?? ''}
+        userEmail={user.email ?? ''}
+      />
+    </AppShell>
   )
 }

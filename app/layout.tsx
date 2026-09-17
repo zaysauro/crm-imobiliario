@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./dark-mode.css";
 import FollowupNotifier from "../components/followup-notifier";
 
 export const dynamic = "force-dynamic";

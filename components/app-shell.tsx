@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '../supabase-client'
 import DashboardMiniKanban from './dashboard-mini-kanban'
@@ -12,7 +12,10 @@ const mainItems = [['/','Dashboard'],['/#leads','Leads'],['/atendimentos','Atend
 export default function AppShell({ children, role = 'corretor', email = '', title = 'CRM Cadena' }: Props) {
   const pathname = usePathname()
   const router = useRouter()
+  const [darkMode,setDarkMode]=useState(false)
   async function logout() { const supabase = createClient(); await supabase.auth.signOut(); router.replace('/login') }
+  useEffect(()=>{const saved=window.localStorage.getItem('crm-theme');const dark=saved==='dark';setDarkMode(dark);document.documentElement.dataset.theme=dark?'dark':'light'},[])
+  const toggleTheme=()=>setDarkMode(v=>{const next=!v;document.documentElement.dataset.theme=next?'dark':'light';window.localStorage.setItem('crm-theme',next?'dark':'light');return next})
   const showDashboardExtras = pathname === '/'
   const isActive = (href: string) => pathname === href || (href !== '/' && pathname.startsWith(href.split('#')[0]))
   return <div className="shell">
@@ -27,6 +30,7 @@ export default function AppShell({ children, role = 'corretor', email = '', titl
       </nav>
       <div className="sidebar-footer">
         <a href="/configuracoes" className={isActive('/configuracoes') ? 'active' : ''}>Configurações</a>
+        <button className="sidebar-logout" onClick={toggleTheme} type="button">{darkMode?'☀️':'🌙'} {darkMode?'Modo claro':'Modo noturno'}</button>
         <button className="sidebar-logout" onClick={logout}>Sair</button>
       </div>
     </aside>

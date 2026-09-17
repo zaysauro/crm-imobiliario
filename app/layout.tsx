@@ -3,6 +3,7 @@ import "./globals.css";
 import "./dark-mode.css";
 import "./responsive.css";
 import FollowupNotifier from "../components/followup-notifier";
+import BottomNav from "../components/BottomNav";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
-      <body>{children}<FollowupNotifier /></body>
+      <body>{children}<FollowupNotifier /><BottomNav /></body>
     </html>
   );
 }

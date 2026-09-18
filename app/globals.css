@@ -55,3 +55,24 @@ button, input, select, textarea { font: inherit; } a { color: inherit; text-deco
 .lead-form label,.transfer-box label,.login-form label,.followup-form label,.form-grid label { display:block; color:#374151; font-size:14px; font-weight:500; margin-bottom:6px; }
 .lead-form label + label,.transfer-box label + label,.login-form label + label,.followup-form label + label { margin-top:10px; }
 .lead-form input[type="checkbox"],.lead-form input[type="radio"],.activity-form input[type="checkbox"],.activity-form input[type="radio"],.transfer-box input[type="checkbox"],.transfer-box input[type="radio"] { width:auto; padding:0; border:0; box-shadow:none; }
+
+.nav-button { border:0; background:transparent; cursor:pointer; text-align:left; font:inherit; position:relative; }
+.nav-item { position:relative; }
+.lead-notification-badge { margin-left:auto; min-width:20px; height:20px; padding:0 6px; display:inline-flex; align-items:center; justify-content:center; border-radius:999px; background:#dc2626; color:#fff; font-size:10px; font-weight:800; line-height:1; }
+.lead-notification-toast { position:fixed; right:24px; bottom:24px; z-index:60; width:min(360px,calc(100vw - 32px)); display:grid; gap:5px; text-align:left; padding:16px 18px; border:1px solid #bfdbfe; border-radius:12px; background:#fff; color:#17202a; box-shadow:0 14px 40px rgba(0,0,0,.16); cursor:pointer; }
+.lead-notification-toast strong { font-size:14px; }
+.lead-notification-toast span { font-size:13px; line-height:1.45; }
+.lead-notification-toast small { color:#6b7280; font-size:11px; margin-top:3px; }
+.lead-roulette-list { display:grid; gap:8px; margin:18px 0; padding:12px; border:1px solid var(--line); border-radius:10px; max-height:300px; overflow:auto; }
+.lead-roulette-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-bottom:4px; }
+.lead-roulette-option { display:flex; align-items:center; gap:11px; padding:10px; border-radius:8px; cursor:pointer; }
+.lead-roulette-option:hover { background:#f5f7fa; }
+.lead-roulette-option input { width:18px; height:18px; flex:0 0 auto; }
+.lead-roulette-option span { display:grid; gap:2px; }
+.lead-roulette-option small { color:var(--muted); font-size:11px; }
+@media(max-width:600px){
+  .lead-notification-toast { right:16px; bottom:82px; }
+  .lead-roulette-list { max-height:240px; }
+}
+.dark .lead-notification-toast { background:var(--surface); color:var(--text-primary); border-color:var(--border-strong); }
+.dark .lead-roulette-option:hover { background:var(--surface-1); }

@@ -52,20 +52,51 @@ export default function LeadRoulette({ role }: { role: string }) {
     setError('')
     setMessage('')
 
-    const { data, error: rpcError } = await supabase.rpc('distribute_pending_leads', {
-      p_corretor_ids: selected,
-    })
+    const { data: pendingLeads, error: pendingError } = await supabase
+      .from('leads')
+      .select('id')
+      .is('responsavel_id', null)
+      .is('deleted_at', null)
+      .order('created_at', { ascending: true })
 
-    if (rpcError) {
-      setError(rpcError.message)
+    if (pendingError) {
+      setError(pendingError.message)
       setLoading(false)
       return
     }
 
-    const total = Number(data ?? 0)
-    setMessage(total > 0
-      ? `${total} lead${total === 1 ? '' : 's'} distribuído${total === 1 ? '' : 's'} com sucesso.`
-      : 'Não há leads pendentes para distribuir.')
+    const leadsToDistribute = pendingLeads ?? []
+    if (!leadsToDistribute.length) {
+      setMessage('Não há leads pendentes para distribuir.')
+      setLoading(false)
+      return
+    }
+
+    let distributed = 0
+    for (let i = 0; i < leadsToDistribute.length; i++) {
+      const brokerId = selected[i % selected.length]
+      const leadId = leadsToDistribute[i].id
+      const { error: updateError } = await supabase
+        .from('leads')
+        .update({ responsavel_id: brokerId })
+        .eq('id', leadId)
+        .is('responsavel_id', null)
+
+      if (updateError) {
+        setError(updateError.message)
+        setLoading(false)
+        return
+      }
+
+      distributed += 1
+    }
+
+    const total = distributed
+    setMessage(
+      total > 0
+        ? String(total) + ' lead' + (total === 1 ? '' : 's') + ' distribuído' + (total === 1 ? '' : 's') + ' com sucesso.'
+        : 'Não há leads pendentes para distribuir.'
+    )
 
     await load()
     setLoading(false)

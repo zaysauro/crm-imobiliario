@@ -80,13 +80,6 @@ export function calculateMcmv(input: McmvInput): McmvResult {
   if (!input.primeiroImovel && !input.possuiImovel) warnings.push('O cliente informa que não é o primeiro imóvel; confirme as regras de enquadramento antes da contratação.')
   if (!band) warnings.push('A renda familiar informada está acima de R$ 8.000 e fica fora das faixas consideradas neste simulador.')
   if (requestedFgts > availableFgts) warnings.push('O FGTS utilizado foi limitado ao saldo informado.')
-  if (propertyValue > 0 && entry + fgtsUsed + subsidyUsed > propertyValue) {
-    warnings.push('Os recursos informados foram ajustados para não ultrapassar o valor do imóvel.')
-  }
-  if (financed <= 0 && propertyValue > 0) {
-    warnings.push('Com os recursos informados, não há saldo a financiar nesta estimativa.')
-  }
-
   const fgtsUsed = Math.min(requestedFgts, availableFgts)
   const subsidyMax = band ? BANDS[band].subsidyMax : 0
   const subsidyUsed = Math.min(
@@ -94,6 +87,12 @@ export function calculateMcmv(input: McmvInput): McmvResult {
     Math.max(0, propertyValue - entry - fgtsUsed)
   )
   const financed = Math.max(0, propertyValue - entry - fgtsUsed - subsidyUsed)
+  if (propertyValue > 0 && entry + fgtsUsed + subsidyUsed > propertyValue) {
+    warnings.push('Os recursos informados foram ajustados para não ultrapassar o valor do imóvel.')
+  }
+  if (financed <= 0 && propertyValue > 0) {
+    warnings.push('Com os recursos informados, não há saldo a financiar nesta estimativa.')
+  }
   const annualRate = band ? BANDS[band].annualRate : 0
   const rate = monthlyRate(annualRate)
   const months = Math.max(1, termYears * 12)

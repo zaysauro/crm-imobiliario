@@ -13,7 +13,7 @@ const navGroups = [
   { key:'crm', label:'CRM', items:[['/#leads','◉','Leads'],['/atendimentos','☷','Atendimentos'],['/kanban','▦','Kanban'],['/followups','◷','Follow-ups']] },
   { key:'agenda', label:'Agenda', items:[['/calendario','▣','Calendário'],['/journal','✎','Meu Journal']] },
   { key:'operacao', label:'Operação', items:[['/importacao','⇩','Importar leads'],['/imoveis','⌂','Imóveis'],['/simulador','▤','Simulador'],['/contratos','▤','Contratos'],['/visitas','◷','Visitas'],['/propostas','✓','Propostas']] },
-  { key:'gestao', label:'Gestão', items:[['/relatorios','▥','Relatórios'],['/dashboard-gerencial','▥','Dashboard Gerencial'],['/gestao','♙','Gestão da equipe'],['/auditoria','◌','Auditoria']] }
+  { key:'gestao', label:'Gestão', items:[['/relatorios','▥','Relatórios'],['/dashboard-gerencial','▥','Dashboard Gerencial'],['/gestao','♙','Gestão da equipe'],['/integracoes/meta','◎','Meta Ads'],['/auditoria','◌','Auditoria']] }
 ] as const
 
 export default function AppShell({ children, role = 'corretor', email = '', title = 'CRM Cadena' }: Props) {
